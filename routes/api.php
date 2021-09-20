@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Middleware\CheckForDuplicates;
 
 
@@ -30,3 +31,9 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/refresh', [AuthController::class, 'refreshToken']);
 });
+
+Route::get('/', [GalleryController::class, 'index']);
+Route::get('/my-galleries', [GalleryController::class, 'showMyGalleries']);
+Route::get('/galleries/{gallery}',[GalleryController::class,'showSingleGallery']);
+Route::post('/create', [GalleryController::class, 'create']);
+
