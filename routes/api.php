@@ -36,4 +36,6 @@ Route::get('/', [GalleryController::class, 'index']);
 Route::get('/my-galleries', [GalleryController::class, 'showMyGalleries']);
 Route::get('/galleries/{gallery}',[GalleryController::class,'showSingleGallery']);
 Route::post('/create', [GalleryController::class, 'create']);
+Route::put('/edit-gallery/{gallery}', [GalleryController::class, 'update']);
+Route::get('/authors/{author}');
 
