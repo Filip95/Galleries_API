@@ -1,18 +1,25 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Gallery;
 use App\Http\Requests\UpdateGalleryRequest;
 use App\Http\Requests\CreateGalleryRequest;
+use App\Models\User;
 
 class GalleryController extends Controller
 {
         public function index(Request $request)
         {
-            $gallery = Gallery::all();
-            return response()->json($gallery);
+            $term = $request->query('name');
+            $per_page = $request->query('per_page', 10);
+
+            $galleries = Gallery::filter($term,$per_page);
+
+            return response()->json($galleries);
         }
 
     public function showSingleGallery(Gallery $gallery)
@@ -20,7 +27,11 @@ class GalleryController extends Controller
             return response()->json($gallery);
         }
 
-    public function showMyGalleries(){}
+
+    public function showMyGalleries(User $user){
+        $galleries = $user->galleries()->with('user')->get();
+        return response()->json($galleries);
+    }
 
     public function create(CreateGalleryRequest $request){
         $data = $request->validated();

@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GalleryController;
-use App\Http\Middleware\CheckForDuplicates;
+use App\Http\Controllers\UserGalleriesController;
+
 
 
 /*
@@ -29,13 +30,17 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('/me', [AuthController::class, 'getMyProfile'])->middleware('auth');
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/refresh', [AuthController::class, 'refreshToken']);
+    Route::post('/refresh', [AuthController::class, 'refreshToken'])->middleware('auth');
 });
 
 Route::get('/', [GalleryController::class, 'index']);
-Route::get('/my-galleries', [GalleryController::class, 'showMyGalleries']);
-Route::get('/galleries/{gallery}',[GalleryController::class,'showSingleGallery']);
-Route::post('/create', [GalleryController::class, 'create']);
-Route::put('/edit-gallery/{gallery}', [GalleryController::class, 'update']);
-Route::get('/authors/{author}');
+Route::get('/my-galleries/{user}', [UserGalleriesController::class, 'showMyGaleries'])->middleware('auth');
+Route::get('/galleries/{gallery}',[GalleryController::class,'showSingleGallery'])->middleware('auth');
+Route::get('author/{author}',[UserGalleriesController::class, 'show'])->middleware('auth');
 
+Route::post('/create', [GalleryController::class, 'store'])->middleware('auth');
+Route::put('/edit-gallery/{gallery}', [GalleryController::class, 'update'])->middleware('auth');
+Route::delete('galleries/{gallery}',[GalleryController::class, 'destroy'])->middleware('auth');
+
+Route::post('/galleries/{gallery}/comments', [CommentController::class, 'store'])->middleware('auth');
+Route::delete('galleries/{gallery}/comments/{comment}',[CommentController::class, 'destroy'])->middleware('auth');

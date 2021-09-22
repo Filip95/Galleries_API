@@ -28,19 +28,14 @@ class Gallery extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public static function filter($term, $user_id = null)
+    public static function filter($term,$per_page)
     {
-        $query = Gallery::query();
+        $query = Gallery::query()->with('images');
 
-        $query->with(['images', 'user']);
-
-        if($user_id) {
-            $query->where('user_id', '=', $user_id);
-        }
 
         if($term) {
             $query->where(function($fnquery) use ($term){
-                $fnquery->where('title', 'like', '%'.$term.'%')
+                $fnquery->where('name', 'like', '%'.$term.'%')
                   ->orWhere('description','like', '%'.$term.'%')
                   ->orWhereHas('user', function($q) use ($term){
                       $q->where('first_name', 'like', '%'.$term.'%')
@@ -50,7 +45,7 @@ class Gallery extends Model
         }
 
         return response()->json([
-            'galleries' =>  $query->latest()->paginate(10)
+            'galleries' =>  $query->latest()->paginate($per_page)
         ]);
     }
 }

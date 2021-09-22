@@ -25,10 +25,10 @@ class RegisterRequest extends FormRequest
     {
 
         return [
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8|confirmed|regex: ^(?=.*\d)(?![.\n]).+$^',
+            'password' => 'required|string|min:8|confirmed|regex: /^(?=.*[A-Za-z])(?=.*[0-9]).{8,}$/',
             'checkbox' => 'accepted',
             # 'password_confirmation' => 'required|string|same:password'
         ];
