@@ -17,7 +17,7 @@ class GalleryController extends Controller
             $term = $request->query('name');
             $per_page = $request->query('per_page', 10);
 
-            $galleries = Gallery::filter($term,$per_page);
+            $galleries = Gallery::filter($term)->paginate($per_page);
 
             return response()->json($galleries);
         }
@@ -28,8 +28,8 @@ class GalleryController extends Controller
         }
 
 
-    public function showMyGalleries(User $user){
-        $galleries = $user->galleries()->with('user')->get();
+    public function showMyGalleries($user_id){
+        $galleries = Gallery::with('images')->where('user_id',$user_id)->get();
         return response()->json($galleries);
     }
 

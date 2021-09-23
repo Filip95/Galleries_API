@@ -25,7 +25,7 @@ class CreateGalleryRequest extends FormRequest
     {
         return [
             'name' => 'required|min:2|max:255',
-            'description' => 'required|max:1000',
+            'description' => 'sometimes|max:1000',
             'image_url' => 'required|url|min:1',
             'image_url.*.url' => ['regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg))/']
         ];

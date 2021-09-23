@@ -28,7 +28,7 @@ class Gallery extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public static function filter($term,$per_page)
+    public static function filter($term,$user_id =null)
     {
         $query = Gallery::query()->with('images');
 
@@ -44,8 +44,6 @@ class Gallery extends Model
                 });
         }
 
-        return response()->json([
-            'galleries' =>  $query->latest()->paginate($per_page)
-        ]);
+        return $query;
     }
 }

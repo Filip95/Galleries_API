@@ -33,14 +33,17 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/refresh', [AuthController::class, 'refreshToken'])->middleware('auth');
 });
 
-Route::get('/', [GalleryController::class, 'index']);
-Route::get('/my-galleries/{user}', [UserGalleriesController::class, 'showMyGaleries'])->middleware('auth');
-Route::get('/galleries/{gallery}',[GalleryController::class,'showSingleGallery'])->middleware('auth');
-Route::get('author/{author}',[UserGalleriesController::class, 'show'])->middleware('auth');
+Route::get('/galleries', [GalleryController::class, 'index']);
+Route::get('/galleries/{gallery}',[GalleryController::class,'showSingleGallery']);
 
-Route::post('/create', [GalleryController::class, 'store'])->middleware('auth');
-Route::put('/edit-gallery/{gallery}', [GalleryController::class, 'update'])->middleware('auth');
-Route::delete('galleries/{gallery}',[GalleryController::class, 'destroy'])->middleware('auth');
 
-Route::post('/galleries/{gallery}/comments', [CommentController::class, 'store'])->middleware('auth');
-Route::delete('galleries/{gallery}/comments/{comment}',[CommentController::class, 'destroy'])->middleware('auth');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::delete('galleries/{gallery}/comments/{comment}',[CommentController::class, 'destroy']);
+    Route::post('/galleries/{gallery}/comments', [CommentController::class, 'store']);
+    Route::delete('galleries/{gallery}',[GalleryController::class, 'destroy']);
+    Route::put('/edit-gallery/{gallery}', [GalleryController::class, 'update']);
+    Route::post('/create', [GalleryController::class, 'store']);
+    Route::get('author/{author}',[UserGalleriesController::class, 'show']);
+    Route::get('/my-galleries/{user}', [UserGalleriesController::class, 'showMyGaleries']);
+});
