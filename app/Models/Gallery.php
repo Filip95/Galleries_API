@@ -30,7 +30,7 @@ class Gallery extends Model
 
     public static function filter($term,$user_id =null)
     {
-        $query = Gallery::query()->with('images');
+        $query = Gallery::query()->with('images','user');
 
 
         if($term) {

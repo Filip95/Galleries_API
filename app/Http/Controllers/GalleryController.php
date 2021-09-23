@@ -24,6 +24,7 @@ class GalleryController extends Controller
 
     public function showSingleGallery(Gallery $gallery)
         {
+            $gallery->load('images');
             return response()->json($gallery);
         }
 
