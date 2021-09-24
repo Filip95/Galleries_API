@@ -11,8 +11,6 @@ class Comment extends Model
 
     protected $fillable = [
         'body',
-        'user_id',
-        'gallery_id'
     ];
 
     public function user(){

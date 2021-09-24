@@ -9,6 +9,8 @@ use App\Models\Gallery;
 use App\Http\Requests\UpdateGalleryRequest;
 use App\Http\Requests\CreateGalleryRequest;
 use App\Models\User;
+use App\Models\Image;
+use Illuminate\Support\Facades\Auth;
 
 class GalleryController extends Controller
 {
@@ -24,7 +26,7 @@ class GalleryController extends Controller
 
     public function showSingleGallery(Gallery $gallery)
         {
-            $gallery->load('images');
+            $gallery->load('images','user' ,'comments');
             return response()->json($gallery);
         }
 
@@ -34,11 +36,23 @@ class GalleryController extends Controller
         return response()->json($galleries);
     }
 
-    public function create(CreateGalleryRequest $request){
+    public function store(CreateGalleryRequest $request){
         $data = $request->validated();
-        $gallery = Gallery::create($data);
-        return response()->json($gallery,201);
+
+        $gallery = new Gallery;
+        $gallery->name = $data['name'];
+        $gallery->description = $data['description'];
+        $gallery->user()->associate(Auth::user());
+        $gallery->save();
+
+        $image = new Image;
+        $image->image_url = $data['image_url'];
+        $image->gallery()->associate($gallery);
+        $image->save();
+
+        return response()->json($gallery);
     }
+    // ['name' => $data['name']],['description' => $data['description']]
 
     public function update(Gallery $gallery, UpdateGalleryRequest $request ){
         $data = $request->validated();

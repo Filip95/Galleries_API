@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CreateCommentRequest;
 use App\Models\Gallery;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     public function store(Gallery $gallery,CreateCommentRequest $request){
         $data = $request->validated();
-        $comment = $gallery->comments()->create($data);
+
+        $comment = new Comment;
+        $comment->body = $data['body'];
+        $comment->user()->associate(Auth::user());
+        $comment->gallery()->associate($gallery);
+        $comment->save();
         return response()->json($comment,201);
     }
     public function destroy(Comment $comment){

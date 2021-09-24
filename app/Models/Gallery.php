@@ -12,7 +12,7 @@ class Gallery extends Model
     protected $fillable = [
         'name',
         'description',
-        'user_id'
+        'image_url',
     ];
 
     public function images(){
